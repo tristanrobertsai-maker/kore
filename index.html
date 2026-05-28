@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KORE</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080c09;
+    --bg2: #0f0e0b;
+    --amber: #c9913a;
+    --amber-light: #e8b060;
+    --amber-dim: #2a1f0d;
+    --text: #ede8e2;
+    --text-dim: #8a8070;
+    --line: #1e1b15;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.4;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 4rem;
+    border-bottom: 1px solid var(--line);
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .logo {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.35em;
+    color: var(--text);
+  }
+
+  .nav-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    border: 1px solid var(--line);
+    padding: 0.4rem 0.9rem;
+    border-radius: 2px;
+  }
+
+  .hero {
+    padding: 9rem 4rem 7rem;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse at center, rgba(201,145,58,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero > * { position: relative; z-index: 1; }
+
+  .hero-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--amber);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .hero-label::before, .hero-label::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--amber);
+  }
+
+  h1 {
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 2.5rem;
+  }
+
+  h1 span { color: var(--amber-light); }
+
+  .hero-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+    max-width: 520px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  .features { animation: fadeUp 1s 0.4s ease both; }
+
+  .feature-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 1fr;
+    align-items: center;
+    padding: 2rem 4rem;
+    border-bottom: 1px solid var(--line);
+    gap: 2rem;
+    transition: background 0.2s ease;
+    cursor: default;
+  }
+
+  .feature-row:hover { background: var(--bg2); }
+  .feature-row:hover .feature-num { color: var(--amber-light); }
+
+  .feature-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    transition: color 0.2s ease;
+  }
+
+  .feature-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .feature-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+    text-align: right;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--line);
+    animation: fadeUp 1s 0.55s ease both;
+  }
+
+  .stat {
+    padding: 3rem 4rem;
+    border-right: 1px solid var(--line);
+    transition: background 0.3s ease;
+  }
+
+  .stat:last-child { border-right: none; }
+  .stat:hover { background: var(--bg2); }
+
+  .stat-num {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-num span { color: var(--amber-light); }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-desc {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  .cta-section {
+    padding: 7rem 4rem;
+    text-align: center;
+    animation: fadeUp 1s 0.7s ease both;
+  }
+
+  .cta-section h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+  }
+
+  .cta-section p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-bottom: 3rem;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--amber);
+    border: none;
+    padding: 1.1rem 3rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #080c09;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+    text-decoration: none;
+  }
+
+  .cta-btn:hover {
+    background: var(--amber-light);
+    transform: translateY(-2px);
+  }
+
+  .waitlist-sub {
+    margin-top: 1.25rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    opacity: 0.6;
+    letter-spacing: 0.08em;
+  }
+
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-logo {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+  }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    opacity: 0.5;
+    letter-spacing: 0.05em;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    nav, .hero, .cta-section, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .feature-row { grid-template-columns: 40px 1fr; padding: 1.5rem; gap: 1rem; }
+    .feature-desc { display: none; }
+    .stats { grid-template-columns: 1fr; }
+    .stat { border-right: none; border-bottom: 1px solid var(--line); padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">KORE</div>
+  <div class="nav-tag">Identity Infrastructure / Web3</div>
+</nav>
+
+<section class="hero">
+  <div class="hero-label">Wallet & Identity Layer</div>
+  <h1>Identity<br>for Every<br><span>Chain.</span></h1>
+  <p class="hero-sub">Auth, permissions, and wallet management — the backbone every serious Web3 product is built on.</p>
+</section>
+
+<section class="features">
+  <div class="feature-row">
+    <div class="feature-num">01</div>
+    <div class="feature-name">Universal Wallet Auth</div>
+    <div class="feature-desc">Sign-in with any wallet across all major chains. One SDK, zero friction.</div>
+  </div>
+  <div class="feature-row">
+    <div class="feature-num">02</div>
+    <div class="feature-name">Granular Permissions</div>
+    <div class="feature-desc">Role-based access control built for on-chain products and multi-sig teams.</div>
+  </div>
+  <div class="feature-row">
+    <div class="feature-num">03</div>
+    <div class="feature-name">Cross-Chain Identity</div>
+    <div class="feature-desc">One user identity, persistent across every chain you deploy on.</div>
+  </div>
+  <div class="feature-row">
+    <div class="feature-num">04</div>
+    <div class="feature-name">Compliance-Ready</div>
+    <div class="feature-desc">KYC/AML hooks built in. Stay compliant without building the plumbing yourself.</div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat">
+    <div class="stat-num"><span>&lt;</span>50<span>ms</span></div>
+    <div class="stat-label">Auth Latency</div>
+    <div class="stat-desc">Wallet verification that never slows your product down.</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">20<span>+</span></div>
+    <div class="stat-label">Wallet Providers</div>
+    <div class="stat-desc">MetaMask to Phantom — every major wallet supported out of the box.</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">SOC<span>2</span></div>
+    <div class="stat-label">Compliance</div>
+    <div class="stat-desc">Enterprise-grade security without the enterprise overhead.</div>
+  </div>
+</div>
+
+<section class="cta-section">
+  <h2>Join the Waitlist.</h2>
+  <p>Be first to build on the identity layer Web3 has been missing.</p>
+  <a class="cta-btn" href="#">Join Waitlist</a>
+  <p class="waitlist-sub">No spam. No noise. Early access only.</p>
+</section>
+
+<footer>
+  <div class="footer-logo">KORE</div>
+  <div class="footer-copy">© 2025 Kore Infrastructure. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
